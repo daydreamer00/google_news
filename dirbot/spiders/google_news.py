@@ -7,15 +7,19 @@ from dirbot.items import GoogleNews
 
 class GoogleNewsSpider(Spider):
 
+
     name = "google_news"
     allowed_domains = ["www.google.com.hk"]
-    start_urls = ["https://www.google.com.hk/search?hl=en&gl=us&tbm=nws&auth"
-                  "user=0&q=election+2016&oq=elect&gs_l=news-cc.3.1.43j0l10j43"
-                  "i53.4845.5526.0.7711.5.5.0.0.0.0.325.491.2j3-1.3.0...0.0..."
-                  "1ac.1.g9cTsl9PXkE&gws_rd=cr"]
+    start_urls = []
     page_num = 1
     max_page_num = 3
     item_num = 1
+
+    def __init__(self, *args, **kwargs):
+        super(GoogleNewsSpider,self).__init__(*args, **kwargs)
+        start_urls = []
+        start_urls.append(kwargs.get('start_url'))
+        self.start_urls = start_urls
 
     def parse(self, response):
         return self.parse_follow_next_page(response)
