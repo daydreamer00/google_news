@@ -27,7 +27,7 @@ class GoogleNewsSpider(Spider):
     def parse_tgt_html(self, response):
         item = response.meta['item']
         item['tgt_url'] = response.url
-        item['tgt_html'] = response.body
+        item['tgt_html'] = response.body.decode('utf8', 'ignore')
         yield item
 
     def parse_follow_next_page(self, response):
@@ -39,9 +39,12 @@ class GoogleNewsSpider(Spider):
             item = GoogleNews()
             item['raw_html_tr'] = tr_sel.xpath('.').extract()
             item['title'] = tr_sel.xpath('td/h3/a/node()').extract()
-            item['press_time'] = tr_sel.xpath('td/div/span/text()').extract()
+            press_time= tr_sel.xpath('td/div/span/text()').extract()[0]
+            item['press']  = press_time.split('-')[0].strip()
+            item['time']  = press_time.split('-')[1].strip()
             item['url'] = tr_sel.xpath('td/h3/a/@href').extract()
             item['img_url'] = tr_sel.xpath('td[2]/a/img/@src').extract()
+            #item['abstract'] = tr_sel.xpath('//*[@id="rso"]/div/div/div/div
             request = scrapy.Request(
                 response.urljoin(item['url'][0]),
                 callback=self.parse_tgt_html)

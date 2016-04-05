@@ -11,8 +11,10 @@ class GoogleNews(Item):
 
     raw_html_tr = Field()
     title = Field()
-    press_time = Field()
+    press = Field()
+    time = Field()
     url = Field()
     img_url = Field()
     tgt_html = Field()
     tgt_url = Field()
+    abstract = Field()
