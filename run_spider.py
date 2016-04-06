@@ -3,6 +3,8 @@
 import argparse
 import os
 import sys
+import time
+import json
 
 
 def run_spider(keywords, depth=5, outfilename='res.json'):
@@ -13,10 +15,19 @@ def run_spider(keywords, depth=5, outfilename='res.json'):
             " ",
          "+"))
     print "Google news Searh URL: " + url
-    cmd = 'proxychains scrapy crawl google_news -a start_url="{0}" -o {1} -t json -s DEPTH_LIMIT={2}'.format(
+    cmd = 'proxychains4 scrapy crawl google_news -a start_url="{0}" -o {1} -t json -s DEPTH_LIMIT={2} -s LOG_FILE=log/scrapy.log -s LOG_LEVEL="INFO"'.format(
         url, outfilename, depth)
     print "Scrapy Cmd: " + cmd
-    return os.system(cmd)
+    ret_code = os.system(cmd)
+    if ret_code != 0:
+        print "Error: Scrapy Failed!"
+    res_dict = {}
+    res_dict['timestamp'] = int(time.time())
+    res_dict['content'] = json.loads(open(outfilename, 'rb').read())
+    with open(outfilename, 'w') as f:
+        f.write(json.dumps(res_dict))
+
+    return ret_code
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='process args')

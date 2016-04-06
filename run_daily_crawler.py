@@ -20,10 +20,7 @@ def daily_crawl(outjsonpath="./json/", depth=5):
                 sub_keyword +
                 ".json")) for sub_keyword in sub_keywords]
     meta = {}
-    meta['time'] = time.time()
-    meta['datetime'] = datetime.datetime.fromtimestamp(
-        meta['time']).strftime('%Y-%m-%d %H:%M:%S')
-    meta['descrip'] = "google news crawl for U.S Elect 2016"
+    meta['description'] = "Election"
     with open(os.path.join(outjsonpath, 'meta.json'), 'w') as f:
         f.write(json.dumps(meta))
 
