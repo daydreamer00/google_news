@@ -4,9 +4,9 @@ import time
 import datetime
 from run_spider import run_spider
 
-def daily_crawl(outjsonpath="./json/", depth=2):
+def daily_crawl(outjsonpath="./json/", depth=5):
     base_keyword = "Election 2016"
-    sub_keywords = [""]#, "republican", "democratic"]
+    sub_keywords = ["", "republican", "democratic"]
     ret_codes = [
         run_spider(
             base_keyword +

@@ -7,7 +7,6 @@ from dirbot.items import GoogleNews
 
 class GoogleNewsSpider(Spider):
 
-
     name = "google_news"
     allowed_domains = ["www.google.com.hk"]
     start_urls = []
@@ -38,13 +37,13 @@ class GoogleNewsSpider(Spider):
 
             item = GoogleNews()
             item['raw_html_tr'] = tr_sel.xpath('.').extract()
-            item['title'] = tr_sel.xpath('td/h3/a/node()').extract()
+            item['title'] = tr_sel.xpath('string(td/h3/a)').extract()
             press_time= tr_sel.xpath('td/div/span/text()').extract()[0]
             item['press']  = press_time.split('-')[0].strip()
             item['time']  = press_time.split('-')[1].strip()
             item['url'] = tr_sel.xpath('td/h3/a/@href').extract()
             item['img_url'] = tr_sel.xpath('td[2]/a/img/@src').extract()
-            #item['abstract'] = tr_sel.xpath('//*[@id="rso"]/div/div/div/div
+            item['abstract'] = tr_sel.xpath('string(td[1]/div[@class="st"])').extract()
             request = scrapy.Request(
                 response.urljoin(item['url'][0]),
                 callback=self.parse_tgt_html)
