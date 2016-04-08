@@ -15,7 +15,7 @@ def run_spider(keywords, depth=5, outfilename='res.json'):
             " ",
          "+"))
     print "Google news Searh URL: " + url
-    cmd = 'proxychains4 scrapy crawl google_news -a start_url="{0}" -o {1} -t json -s DEPTH_LIMIT={2} -s LOG_FILE=log/scrapy.log -s LOG_LEVEL="INFO"'.format(
+    cmd = 'proxychains scrapy crawl google_news -a start_url="{0}" -o {1} -t json -s DEPTH_LIMIT={2} -s LOG_FILE=log/scrapy.log -s LOG_LEVEL="INFO"'.format(
         url, outfilename, depth)
     print "Scrapy Cmd: " + cmd
     ret_code = os.system(cmd)
