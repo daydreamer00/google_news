@@ -3,6 +3,7 @@ import json
 import time
 import datetime
 from run_spider import run_spider
+from json2html import json2html
 
 def daily_crawl(outjsonpath="./json/", depth=5):
     base_keyword = "Election 2016"
@@ -25,6 +26,8 @@ def daily_crawl(outjsonpath="./json/", depth=5):
         f.write(json.dumps(meta))
 
     print "Returen codes: " + str(ret_codes)
+    json2html()
+
     return ret_codes
 
 if __name__ == '__main__':
