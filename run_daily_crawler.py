@@ -1,15 +1,13 @@
 import os
 import json
-import time
-import datetime
-from run_spider import run_spider
-from json2html import json2html
+from run_spider import run_google_news_spider,run_google_search_spider
+from google_news_json2html import google_news_json2html
 
 def daily_crawl(outjsonpath="./json/", depth=5):
     base_keyword = "Election 2016"
     sub_keywords = ["", "republican", "democratic"]
     ret_codes = [
-        run_spider(
+        run_google_news_spider(
             base_keyword +
             " " +
             sub_keyword,
@@ -26,9 +24,18 @@ def daily_crawl(outjsonpath="./json/", depth=5):
         f.write(json.dumps(meta))
 
     print "Returen codes: " + str(ret_codes)
-    json2html()
+    if sum(ret_codes)==0:
+       os.system('cp json/*.json html/latest/')
+       google_news_json2html()
 
-    return ret_codes
+    votes_file_name = os.path.join(outjsonpath,'votes.json')
+    ret_code = run_google_search_spider(depth,votes_file_name)
 
+    ret_codes.append(ret_code)
+
+    if sum(ret_codes)==0:
+       os.system('cp json/*.json html/latest/')
+       google_news_json2html()
+    return
 if __name__ == '__main__':
     daily_crawl()

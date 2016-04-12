@@ -18,3 +18,7 @@ class GoogleNews(Item):
     tgt_html = Field()
     tgt_url = Field()
     abstract = Field()
+
+class GoogleSearch(Item):
+    name = Field()
+    votes = Field()
