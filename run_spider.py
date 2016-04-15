@@ -50,12 +50,13 @@ def run_google_search_spider(depth=5, outfilename='res.json'):
     res_dict = {}
     res_dict['timestamp'] = int(time.time())
     res_dict['content'] = {'democratic':[],'republican':[]}
+    democratic_candidates = ["Clinton","Sanders"]
 
-    for idx in range(2):
-        res_dict['content']['democratic'].append(json_dict[idx])
-
-    for idx in range(2,5):
-        res_dict['content']['republican'].append(json_dict[idx])
+    for candidate in json_dict:
+        if candidate["name"] in democratic_candidates:
+            res_dict['content']['democratic'].append(candidate)
+        else:
+            res_dict['content']['republican'].append(candidate)
 
     with open(outfilename,'w') as f:
         f.write(json.dumps(res_dict))

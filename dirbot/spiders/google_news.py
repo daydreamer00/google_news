@@ -39,8 +39,9 @@ class GoogleNewsSpider(Spider):
             #`item['raw_html_tr'] = tr_sel.xpath('.').extract()[0]
             item['title'] = tr_sel.xpath('string(td/h3/a)').extract()[0]
             press_time= tr_sel.xpath('td/div/span/text()').extract()[0]
-            item['press']  = press_time.split('-')[0].strip()
-            item['time']  = press_time.split('-')[1].strip()
+            press_time_list = press_time.split('-')
+            item['press']  = '-'.join(press_time_list[:-1]).strip()
+            item['time']  = press_time_list[-1].strip()
             item['url'] = tr_sel.xpath('td/h3/a/@href').extract()[0]
             item['img_url'] = tr_sel.xpath('td[2]/a/img/@src').extract()
             if (len(item['img_url'])!=1):
