@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import json
+from pymongo import MongoClient
 
 
 def run_google_news_spider(keywords, depth=5, outfilename='res.json'):
@@ -30,6 +31,16 @@ def run_google_news_spider(keywords, depth=5, outfilename='res.json'):
     res_dict['content'] = json.loads(json_str)
     with open(outfilename, 'w') as f:
         f.write(json.dumps(res_dict))
+
+    dbclient = MongoClient().elect2016.google_news_items
+    for doc in res_dict['content']:
+        doc['_id'] = doc ['news_id']
+        doc.pop("news_id",None)
+        doc['timestamp'] = res_dict['timestamp']
+        if dbclient.find({'_id' :  doc['_id']}).count() > 0:
+            dbclient.update({ '_id': doc['_id']},doc)
+        else:
+            dbclient.insert_one(doc)
 
     return ret_code
 

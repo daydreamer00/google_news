@@ -15,9 +15,11 @@ class GoogleNews(Item):
     time = Field()
     url = Field()
     img_url = Field()
-    tgt_html = Field()
+    #tgt_html = Field()
     tgt_url = Field()
     abstract = Field()
+    news_id = Field()
+    keywords = Field()
 
 class GoogleSearch(Item):
     name = Field()

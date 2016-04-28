@@ -1,6 +1,8 @@
 from scrapy.spiders import Spider
 from scrapy.selector import Selector
+import uuid
 import scrapy
+import re
 
 from dirbot.items import GoogleNews
 
@@ -26,7 +28,7 @@ class GoogleNewsSpider(Spider):
     def parse_tgt_html(self, response):
         item = response.meta['item']
         item['tgt_url'] = response.url
-        #item['tgt_html'] = response.body.decode('utf8', 'ignore')
+        item['news_id'] = str(uuid.uuid3(uuid.NAMESPACE_URL,response.url))
         yield item
 
     def parse_follow_next_page(self, response):
@@ -36,13 +38,20 @@ class GoogleNewsSpider(Spider):
         for tr_sel in search_res_tr_sellist:
 
             item = GoogleNews()
-            #`item['raw_html_tr'] = tr_sel.xpath('.').extract()[0]
             item['title'] = tr_sel.xpath('string(td/h3/a)').extract()[0]
             press_time= tr_sel.xpath('td/div/span/text()').extract()[0]
             press_time_list = press_time.split('-')
             item['press']  = '-'.join(press_time_list[:-1]).strip()
             item['time']  = press_time_list[-1].strip()
             item['url'] = tr_sel.xpath('td/h3/a/@href').extract()[0]
+            print("pageurl: "+response.url)
+            pat = re.compile("q=(.*?)&")
+            matches = re.findall(pat,response.url)
+            if len(matches) > 0:
+                item['keywords'] = matches[0].replace('+',' ')
+            else:
+                item['keywords'] = ""
+
             item['img_url'] = tr_sel.xpath('td[2]/a/img/@src').extract()
             if (len(item['img_url'])!=1):
                 yield

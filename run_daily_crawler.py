@@ -19,6 +19,8 @@ def daily_crawl(outjsonpath="./json/", depth=5):
                 " " +
                 sub_keyword +
                 ".json")) for sub_keyword in sub_keywords]
+    keywords ="United States Presidential Primary 2016"
+    ret_codes.append(run_google_news_spider( keywords, depth, os.path.join( outjsonpath, keywords+".json")) )
     meta = {}
     meta['description'] = "Election"
     with open(os.path.join(outjsonpath, 'meta.json'), 'w') as f:
@@ -33,6 +35,9 @@ def daily_crawl(outjsonpath="./json/", depth=5):
 
     if sum(ret_codes)==0:
        os.system('cp json/*.json html/latest/')
+       os.system('rm html/latest/Election_2016_.json')
+       os.system('cp json/United_States_Presidential_Primary_2016.json html/latest/Election_2016_.json')
+
        datestr = datetime.datetime.now().strftime('%Y%m%d%H')
        os.system('mkdir -p html/history/google_news_{0}'.format(datestr))
        os.system('cp json/*.json html/history/google_news_{0}/'.format(datestr))
