@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import json
+import random
 from pymongo import MongoClient
 
 
@@ -20,6 +21,7 @@ def run_google_news_spider(keywords, depth=5, outfilename='res.json'):
     #cmd = 'proxychains scrapy crawl google_news -a start_url="{0}" -o {1} -t json -s DEPTH_LIMIT={2} '.format(url, outfilename, depth)
     print "Scrapy Cmd: " + cmd
     ret_code = os.system(cmd)
+    #ret_code = os.system("echo pretend to scrawl")
     if ret_code != 0:
         print "Error: Scrapy Google News Failed!"
         exit(-1)
@@ -29,6 +31,10 @@ def run_google_news_spider(keywords, depth=5, outfilename='res.json'):
         json_str = f.read()
 
     res_dict['content'] = json.loads(json_str)
+    res_dict['content'].sort(cmp = lambda x,y: 1 if ("hour" in x and "hour" not in y) else
+                                        1 if ("day" in x and "day" not in y and "hour" not in y) else
+                                        -1 ,reverse = True,key = lambda x:x["time"])
+    #print '\t'.join(map(lambda x:x["time"], res_dict['content']['content']))
     with open(outfilename, 'w') as f:
         f.write(json.dumps(res_dict))
 
