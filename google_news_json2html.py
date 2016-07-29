@@ -3,9 +3,10 @@ from bs4 import Tag, NavigableString
 from json import loads
 import datetime
 
-json_base_filename = "html/latest/Election_2016_"
-json_sub_filenames = ["", "democratic", "republican"]
+json_base_filename = "html/latest/United_States_Presidential_Election_2016_"
+json_sub_filenames = ["democratic", "republican"]
 json_filenames = [json_base_filename+s+".json" for s in json_sub_filenames]
+json_filenames.append("html/latest/Election_2016_.json")
 domain = "www.google.com.hk"
 
 def clone(el):
@@ -37,7 +38,7 @@ def google_news_json2html():
         timestamp = json_dict["timestamp"]
         contents = json_dict["content"]
         html = '<!DOCTYPE html> <html> <body> <style >table {table-layout: auto; border-collapse: separate; width: 100%; border: 1px solid black; } td { border: 1px solid black; }table{} .content-loader tr td { white-space: nowrap; }</style><table >'
-        header = '<tr class="block"><td>Title</td><td>Image</td><td>Press</td><td>Time</td><td>Abstract</td></tr>'
+        header = '<tr class="block"><td>Title</td><td>Image</td><td>Press</td><td>Time</td><td>Abstract</td><td>Keywords</td></tr>'
         html = html + header
 
         for content in contents:
@@ -48,6 +49,7 @@ def google_news_json2html():
             time = content["time"].encode('utf-8','ignore')
             url = content["url"].encode('utf-8','ignore')
             tgt_url = content["tgt_url"].encode('utf-8','ignore')
+            keywords = content["keywords"].encode('utf-8','ignore')
             img_urls = content["img_url"]
             if len(img_urls):
                 img_url = img_urls[0].encode('utf-8','ignore')
@@ -55,7 +57,7 @@ def google_news_json2html():
                 img_url = ""
             #tgt_url = content["tgt_url"]
             abstract = content["abstract"].encode('utf-8','ignore')
-            tr = '<tr class="block"><td><a href="{3}"> {0}</a></td><td><img src="{5}" alt="No Image"></td><td>{1}</td><td>{2}</td><td>{4}</td></tr>'.format(title,press,time,tgt_url,abstract,img_url)
+            tr = '<tr class="block"><td><a href="{3}"> {0}</a></td><td><img src="{5}" alt="No Image"></td><td>{1}</td><td>{2}</td><td>{4}</td><td>{6}</td></tr>'.format(title,press,time,tgt_url,abstract,img_url,keywords)
             html = html + tr
 
         html = html + "</table> </body> </html> "
